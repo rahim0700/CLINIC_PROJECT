@@ -1,0 +1,94 @@
+{% extends 'booking/base.html' %}
+{% block title %}Register — MediCare Clinic{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header text-white py-3" style="background:linear-gradient(135deg,#0d47a1,#1a73e8);">
+                <h4 class="mb-0 text-center"><i class="fas fa-user-plus me-2"></i>Patient Registration</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <h6 class="text-primary border-bottom pb-2 mb-3"><i class="fas fa-user me-2"></i>Account Information</h6>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Username *</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone *</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Birth *</label>
+                            {{ form.date_of_birth }}
+                            {% if form.date_of_birth.errors %}<div class="text-danger small">{{ form.date_of_birth.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Password *</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}<div class="text-danger small">{{ form.password1.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Confirm Password *</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <h6 class="text-primary border-bottom pb-2 mb-3 mt-4"><i class="fas fa-notes-medical me-2"></i>Medical Information</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Blood Group</label>
+                            {{ form.blood_group }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Emergency Contact</label>
+                            {{ form.emergency_contact }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Address *</label>
+                            {{ form.address }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Known Allergies</label>
+                            {{ form.allergies }}
+                        </div>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-check me-2"></i>Create Account
+                        </button>
+                    </div>
+                </form>
+                <hr>
+                <p class="text-center mb-0">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input, select, textarea { border-radius: 8px !important; }
+    .form-control, .form-select { padding: 10px 14px; }
+</style>
+{% endblock %}

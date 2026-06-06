@@ -1,0 +1,78 @@
+{% extends 'booking/base.html' %}
+{% block title %}Admin Dashboard — MediCare{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="fas fa-cogs me-2 text-primary"></i>Admin Dashboard</h3>
+<div class="row g-4 mb-4">
+    <div class="col-md-2">
+        <div class="card stat-card p-3 text-center">
+            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+            <h4>{{ stats.total_patients }}</h4><small class="text-muted">Patients</small>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card p-3 text-center" style="border-left-color:#4caf50">
+            <i class="fas fa-user-md fa-2x text-success mb-2"></i>
+            <h4>{{ stats.total_doctors }}</h4><small class="text-muted">Doctors</small>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card p-3 text-center" style="border-left-color:#2196f3">
+            <i class="fas fa-calendar fa-2x text-info mb-2"></i>
+            <h4>{{ stats.total_appointments }}</h4><small class="text-muted">Appointments</small>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card stat-card p-3 text-center" style="border-left-color:#ff9800">
+            <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+            <h4>{{ stats.pending_appointments }}</h4><small class="text-muted">Pending</small>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center" style="border-left: 4px solid #f44336;">
+            <i class="fas fa-envelope fa-2x text-danger mb-2"></i>
+            <h4>{{ stats.unresolved_messages }}</h4><small class="text-muted">Unresolved Messages</small>
+        </div>
+    </div>
+</div>
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">Recent Appointments</h5></div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for appt in recent_appointments %}
+                        <tr>
+                            <td>{{ appt.patient.user.get_full_name }}</td>
+                            <td>Dr. {{ appt.doctor.user.get_full_name }}</td>
+                            <td>{{ appt.date }}</td>
+                            <td><span class="badge bg-{{ appt.get_status_badge }}">{{ appt.get_status_display }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-danger text-white"><h5 class="mb-0">Unresolved Messages</h5></div>
+            <div class="card-body">
+                {% for msg in unresolved_messages %}
+                <div class="border-bottom pb-2 mb-2">
+                    <p class="mb-0 fw-semibold">{{ msg.name }}</p>
+                    <small class="text-muted">{{ msg.get_subject_display }} — {{ msg.created_at|date:"d M" }}</small>
+                </div>
+                {% empty %}<p class="text-muted text-center">All messages resolved!</p>{% endfor %}
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body text-center">
+                <h6>Django Admin Panel</h6>
+                <a href="/admin/" class="btn btn-dark btn-sm"><i class="fas fa-external-link-alt me-1"></i>Open Admin</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

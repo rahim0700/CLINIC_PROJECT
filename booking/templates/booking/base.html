@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MediCare Clinic{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --secondary: #0d47a1;
+            --accent: #00bcd4;
+            --light-bg: #f0f4f8;
+        }
+        body { background-color: var(--light-bg); font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: linear-gradient(135deg, var(--secondary), var(--primary)); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .navbar-brand { font-weight: 700; font-size: 1.4rem; }
+        .nav-link { color: rgba(255,255,255,0.9) !important; transition: color 0.2s; }
+        .nav-link:hover { color: #fff !important; }
+        .btn-primary { background: var(--primary); border-color: var(--primary); }
+        .btn-primary:hover { background: var(--secondary); border-color: var(--secondary); }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .card-header { border-radius: 12px 12px 0 0 !important; }
+        footer { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; padding: 30px 0; margin-top: 60px; }
+        .badge-pending { background-color: #ff9800; }
+        .badge-approved { background-color: #4caf50; }
+        .badge-cancelled { background-color: #f44336; }
+        .badge-completed { background-color: #2196f3; }
+        .stat-card { border-left: 4px solid var(--primary); transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fas fa-hospital-alt me-2"></i>MediCare Clinic
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'doctor_list' %}"><i class="fas fa-user-md me-1"></i>Doctors</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle me-1"></i>About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="fas fa-envelope me-1"></i>Contact</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>{{ user.get_full_name|default:user.username }}
+                            <span class="badge bg-light text-dark ms-1">{{ user.get_role }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                            {% if user.is_patient %}
+                                <li><a class="dropdown-item" href="{% url 'book_appointment' %}"><i class="fas fa-calendar-plus me-2"></i>Book Appointment</a></li>
+                                <li><a class="dropdown-item" href="{% url 'my_appointments' %}"><i class="fas fa-calendar-check me-2"></i>My Appointments</a></li>
+                                <li><a class="dropdown-item" href="{% url 'history' %}"><i class="fas fa-file-medical me-2"></i>Medical History</a></li>
+                            {% endif %}
+                            {% if user.is_doctor %}
+                                <li><a class="dropdown-item" href="{% url 'doctor_appointments' %}"><i class="fas fa-calendar me-2"></i>Appointments</a></li>
+                                <li><a class="dropdown-item" href="{% url 'doctor_patient_list' %}"><i class="fas fa-users me-2"></i>My Patients</a></li>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="fas fa-cogs me-2"></i>Admin Panel</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
+                    <li class="nav-item"><a class="btn btn-light btn-sm ms-2 mt-1" href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5><i class="fas fa-hospital-alt me-2"></i>MediCare Clinic</h5>
+                <p class="text-white-50">Providing quality healthcare services with modern digital solutions.</p>
+            </div>
+            <div class="col-md-4">
+                <h6>Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}" class="text-white-50">Home</a></li>
+                    <li><a href="{% url 'doctor_list' %}" class="text-white-50">Our Doctors</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-white-50">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h6>Contact</h6>
+                <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i>Kampala, Uganda</p>
+                <p class="text-white-50"><i class="fas fa-phone me-2"></i>+256 700 000 000</p>
+                <p class="text-white-50"><i class="fas fa-envelope me-2"></i>info@medicare.ug</p>
+            </div>
+        </div>
+        <hr class="border-light">
+        <p class="text-center text-white-50 mb-0">© 2026 MediCare Clinic | CSC 1202 — 25/U/03324/PSA | Makerere University</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'booking/base.html' %}
+{% block title %}Add Medical Record — MediCare{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-md-7">
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="fas fa-file-medical-alt me-2"></i>Add Medical Record — {{ patient.user.get_full_name }}</h5>
+    </div>
+    <div class="card-body p-4">
+        <form method="post">{% csrf_token %}
+            <div class="mb-3"><label class="form-label fw-semibold">Diagnosis *</label>{{ form.diagnosis }}{% if form.diagnosis.errors %}<div class="text-danger small">{{ form.diagnosis.errors }}</div>{% endif %}</div>
+            <div class="mb-3"><label class="form-label fw-semibold">Prescription *</label>{{ form.prescription }}</div>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6"><label class="form-label">Date</label>{{ form.date }}</div>
+                <div class="col-md-6"><label class="form-label">Follow-up Date</label>{{ form.follow_up_date }}</div>
+            </div>
+            <div class="mb-3"><label class="form-label">Additional Notes</label>{{ form.notes }}</div>
+            <div class="d-grid"><button type="submit" class="btn btn-success btn-lg"><i class="fas fa-save me-2"></i>Save Record</button></div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+<style>.form-control, .form-select { padding:10px 14px; border-radius:8px; }</style>
+{% endblock %}

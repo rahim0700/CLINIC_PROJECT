@@ -1,0 +1,105 @@
+{% extends 'booking/base.html' %}
+{% block title %}Doctor Dashboard — MediCare{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fas fa-stethoscope me-2 text-primary"></i>Doctor Dashboard</h3>
+    <span class="text-muted">Dr. {{ request.user.get_full_name }} | {{ doctor.specialization }}</span>
+</div>
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card p-3 text-center">
+            <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+            <h4 class="fw-bold">{{ stats.today }}</h4>
+            <small class="text-muted">Today's Appointments</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3 text-center" style="border-left-color:#ff9800">
+            <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+            <h4 class="fw-bold text-warning">{{ stats.pending }}</h4>
+            <small class="text-muted">Awaiting Approval</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3 text-center" style="border-left-color:#4caf50">
+            <i class="fas fa-check-double fa-2x text-success mb-2"></i>
+            <h4 class="fw-bold text-success">{{ stats.completed }}</h4>
+            <small class="text-muted">Completed</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3 text-center" style="border-left-color:#9c27b0">
+            <i class="fas fa-users fa-2x text-purple mb-2"></i>
+            <h4 class="fw-bold">{{ stats.total }}</h4>
+            <small class="text-muted">Total Appointments</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Pending Approvals</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if pending_appointments %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light"><tr><th>Patient</th><th>Date</th><th>Time</th><th>Reason</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            {% for appt in pending_appointments %}
+                            <tr>
+                                <td>{{ appt.patient.user.get_full_name }}</td>
+                                <td>{{ appt.date }}</td>
+                                <td>{{ appt.get_time_display }}</td>
+                                <td>{{ appt.reason|truncatechars:30 }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'approve_appointment' appt.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                                    </form>
+                                    <form method="post" action="{% url 'cancel_appointment_doctor' appt.pk %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Cancel?')"><i class="fas fa-times"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted"><i class="fas fa-check-circle fa-2x mb-2"></i><p>No pending appointments.</p></div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'doctor_appointments' %}" class="btn btn-sm btn-outline-primary">All Appointments</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Today's Schedule</h5>
+            </div>
+            <div class="card-body">
+                {% if today_appointments %}
+                    {% for appt in today_appointments %}
+                    <div class="d-flex align-items-center border-bottom pb-2 mb-2">
+                        <div class="me-3 text-primary fw-bold">{{ appt.get_time_display }}</div>
+                        <div>
+                            <p class="mb-0 fw-semibold">{{ appt.patient.user.get_full_name }}</p>
+                            <small class="text-muted">{{ appt.reason|truncatechars:40 }}</small>
+                        </div>
+                        <span class="badge bg-{{ appt.get_status_badge }} ms-auto">{{ appt.get_status_display }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p class="text-muted text-center py-3"><i class="fas fa-calendar-times fa-2x mb-2 d-block"></i>No appointments today.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

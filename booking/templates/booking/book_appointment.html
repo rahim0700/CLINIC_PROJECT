@@ -1,0 +1,66 @@
+{% extends 'booking/base.html' %}
+{% block title %}Book Appointment — MediCare{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header text-white py-3" style="background:linear-gradient(135deg,#0d47a1,#1a73e8);">
+                <h4 class="mb-0 text-center"><i class="fas fa-calendar-plus me-2"></i>Book an Appointment</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"><i class="fas fa-user-md me-1"></i>Select Doctor *</label>
+                        <select name="doctor" class="form-select" required>
+                            <option value="">--- Choose a doctor ---</option>
+                            {% for doctor in form.doctor.field.queryset %}
+                            <option value="{{ doctor.pk }}" {% if form.doctor.value == doctor.pk|stringformat:'s' %}selected{% endif %}>
+                                Dr. {{ doctor.user.get_full_name }} — {{ doctor.specialization }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.doctor.errors %}<div class="text-danger small">{{ form.doctor.errors }}</div>{% endif %}
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold"><i class="fas fa-calendar me-1"></i>Date *</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}<div class="text-danger small">{{ form.date.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold"><i class="fas fa-clock me-1"></i>Time Slot *</label>
+                            <select name="time" class="form-select" required>
+                                <option value="">--- Choose time ---</option>
+                                {% for value, display in form.time.field.choices %}
+                                <option value="{{ value }}">{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.time.errors %}<div class="text-danger small">{{ form.time.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold"><i class="fas fa-stethoscope me-1"></i>Reason for Visit *</label>
+                        <textarea name="reason" class="form-control" rows="4" placeholder="Describe your symptoms or reason for visit..." required></textarea>
+                        {% if form.reason.errors %}<div class="text-danger small">{{ form.reason.errors }}</div>{% endif %}
+                    </div>
+                    <div class="alert alert-info small">
+                        <i class="fas fa-info-circle me-2"></i>Your appointment will be reviewed and approved by the doctor. You will see status updates in your dashboard.
+                    </div>
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-check me-2"></i>Confirm Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .form-control, .form-select { padding: 10px 14px; border-radius: 8px; }
+</style>
+{% endblock %}

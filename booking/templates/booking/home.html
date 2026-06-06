@@ -1,0 +1,111 @@
+{% extends 'booking/base.html' %}
+{% block title %}MediCare Clinic — Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="rounded-4 p-5 mb-5 text-white" style="background: linear-gradient(135deg, #0d47a1, #1a73e8);">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <h1 class="display-4 fw-bold">Your Health, Our Priority</h1>
+            <p class="lead mb-4">Book appointments online, access your medical history, and connect with qualified doctors — all from one place.</p>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-user-plus me-2"></i>Register Now
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </a>
+            {% else %}
+                <a href="{% url 'book_appointment' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-lg-5 text-center d-none d-lg-block">
+            <i class="fas fa-hospital" style="font-size: 8rem; opacity: 0.3;"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card stat-card text-center p-4">
+            <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+            <h2 class="fw-bold text-primary">{{ total_doctors }}+</h2>
+            <p class="text-muted mb-0">Qualified Doctors</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card text-center p-4">
+            <i class="fas fa-users fa-3x text-success mb-3"></i>
+            <h2 class="fw-bold text-success">{{ total_patients }}+</h2>
+            <p class="text-muted mb-0">Registered Patients</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card text-center p-4">
+            <i class="fas fa-calendar-check fa-3x text-info mb-3"></i>
+            <h2 class="fw-bold text-info">{{ total_appointments }}+</h2>
+            <p class="text-muted mb-0">Appointments Completed</p>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Doctors -->
+<h3 class="mb-4"><i class="fas fa-user-md me-2 text-primary"></i>Our Doctors</h3>
+<div class="row g-4 mb-5">
+    {% for doctor in doctors %}
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-4">
+            <div class="mb-3">
+                <span style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1a73e8,#0d47a1);display:inline-flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-user-md fa-2x text-white"></i>
+                </span>
+            </div>
+            <h5 class="fw-bold">Dr. {{ doctor.user.get_full_name }}</h5>
+            <span class="badge bg-primary mb-2">{{ doctor.specialization }}</span>
+            <p class="text-muted small">{{ doctor.years_of_experience }} years experience</p>
+            <p class="text-muted small"><i class="fas fa-calendar-alt me-1"></i>{{ doctor.available_days }}</p>
+            <a href="{% url 'book_appointment' %}?doctor={{ doctor.pk }}" class="btn btn-sm btn-outline-primary mt-2">Book Now</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<a href="{% url 'doctor_list' %}" class="btn btn-primary">View All Doctors <i class="fas fa-arrow-right ms-1"></i></a>
+
+<!-- How It Works -->
+<div class="my-5">
+    <h3 class="mb-4 text-center"><i class="fas fa-info-circle me-2 text-primary"></i>How It Works</h3>
+    <div class="row g-4 text-center">
+        <div class="col-md-3">
+            <div class="card p-4 h-100">
+                <div class="rounded-circle bg-primary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;"><b>1</b></div>
+                <h6>Register Account</h6>
+                <p class="text-muted small">Create your patient account in minutes.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4 h-100">
+                <div class="rounded-circle bg-primary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;"><b>2</b></div>
+                <h6>Choose a Doctor</h6>
+                <p class="text-muted small">Browse our qualified specialists.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4 h-100">
+                <div class="rounded-circle bg-primary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;"><b>3</b></div>
+                <h6>Book Appointment</h6>
+                <p class="text-muted small">Pick your preferred date and time.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4 h-100">
+                <div class="rounded-circle bg-primary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;"><b>4</b></div>
+                <h6>Get Treated</h6>
+                <p class="text-muted small">Visit the clinic and receive care.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

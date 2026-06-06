@@ -1,0 +1,66 @@
+{% extends 'booking/base.html' %}
+{% block title %}My Appointments — MediCare{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fas fa-calendar-check me-2 text-primary"></i>My Appointments</h3>
+    <a href="{% url 'book_appointment' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Book New</a>
+</div>
+<!-- Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-auto">
+                <label class="form-label mb-0">Filter by status:</label>
+            </div>
+            {% for value, label in STATUS_CHOICES %}
+            <div class="col-auto">
+                <a href="?status={{ value }}" class="btn btn-sm {% if status_filter == value %}btn-primary{% else %}btn-outline-secondary{% endif %}">{{ label }}</a>
+            </div>
+            {% endfor %}
+            <div class="col-auto">
+                <a href="?" class="btn btn-sm btn-outline-dark">All</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% if appointments %}
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr><th>#</th><th>Doctor</th><th>Specialization</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for appt in appointments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>Dr. {{ appt.doctor.user.get_full_name }}</td>
+                        <td>{{ appt.doctor.specialization }}</td>
+                        <td>{{ appt.date }}</td>
+                        <td>{{ appt.get_time_display }}</td>
+                        <td>{{ appt.reason|truncatechars:40 }}</td>
+                        <td><span class="badge bg-{{ appt.get_status_badge }}">{{ appt.get_status_display }}</span></td>
+                        <td>
+                            {% if appt.status in 'pending,approved' %}
+                            <form method="post" action="{% url 'cancel_appointment' appt.pk %}" class="d-inline" onsubmit="return confirm('Cancel this appointment?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card text-center py-5">
+    <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+    <h5 class="text-muted">No appointments found.</h5>
+    <a href="{% url 'book_appointment' %}" class="btn btn-primary mt-2">Book Your First Appointment</a>
+</div>
+{% endif %}
+{% endblock %}

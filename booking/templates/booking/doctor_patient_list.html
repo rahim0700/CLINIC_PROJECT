@@ -1,0 +1,22 @@
+{% extends 'booking/base.html' %}
+{% block title %}My Patients — MediCare{% endblock %}
+{% block content %}
+<h3 class="mb-4"><i class="fas fa-users me-2 text-primary"></i>My Patients</h3>
+{% if patients %}
+<div class="row g-3">
+    {% for patient in patients %}
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h6 class="fw-bold">{{ patient.user.get_full_name }}</h6>
+            <p class="text-muted small mb-1"><i class="fas fa-birthday-cake me-1"></i>Age: {{ patient.get_age }}</p>
+            <p class="text-muted small mb-1"><i class="fas fa-tint me-1"></i>Blood Group: {{ patient.blood_group|default:"N/A" }}</p>
+            <p class="text-muted small mb-2"><i class="fas fa-phone me-1"></i>{{ patient.user.phone|default:"N/A" }}</p>
+            <a href="{% url 'add_medical_record' patient.pk %}" class="btn btn-sm btn-outline-success">Add Record</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card text-center py-5 text-muted"><p>No patients found. Approve appointments to see patients here.</p></div>
+{% endif %}
+{% endblock %}

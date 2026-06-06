@@ -1,0 +1,57 @@
+{% extends 'booking/base.html' %}
+{% block title %}Contact Us — MediCare{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header text-white py-3" style="background:linear-gradient(135deg,#0d47a1,#1a73e8);">
+                <h4 class="mb-0 text-center"><i class="fas fa-envelope me-2"></i>Contact & Feedback</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Your Name *</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Subject *</label>
+                            {{ form.subject }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Message *</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}<div class="text-danger small">{{ form.message.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-paper-plane me-2"></i>Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5><i class="fas fa-map-marker-alt text-primary me-2"></i>Find Us</h5>
+                <p class="text-muted">Plot 15, Kampala Road<br>Kampala, Uganda</p>
+                <h5><i class="fas fa-phone text-primary me-2"></i>Call Us</h5>
+                <p class="text-muted">+256 700 000 000<br>Mon–Fri: 8AM–6PM</p>
+                <h5><i class="fas fa-envelope text-primary me-2"></i>Email</h5>
+                <p class="text-muted">info@medicare.ug</p>
+            </div>
+        </div>
+    </div>
+</div>
+<style>.form-control, .form-select { padding: 10px 14px; border-radius: 8px; }</style>
+{% endblock %}
