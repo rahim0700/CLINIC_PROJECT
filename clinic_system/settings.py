@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-clinic-system-csc1202
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.onrender.com']
+ALLOWED_HOSTS = ['*', '127.0.0.1', 'localhost', 'clinic-project-7aru.onrender.com']
 
 # Application definition
 INSTALLED_APPS = [
