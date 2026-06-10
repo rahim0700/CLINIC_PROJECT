@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - MediCare Clinic{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card p-4 shadow-sm border-0 my-4">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold text-primary">Patient Registration</h3>
+                    <p class="text-muted small">Create an account to manage appointments and health history</p>
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <h5 class="fw-bold text-secondary border-bottom pb-2 mb-3">Account Information</h5>
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">{{ form.username.label }}</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors.0 }}</div>{% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-medium">First Name</label>
+                            <input type="text" name="first_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-medium">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-medium">Email Address</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-medium">Phone Number</label>
+                            <input type="text" name="phone" class="form-control" placeholder="+256..." required>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-secondary border-bottom pb-2 mb-3 mt-4">Medical Profile Context</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-medium">Date of Birth</label>
+                            <input type="date" name="date_of_birth" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-medium">Blood Group</label>
+                            <select name="blood_group" class="form-select">
+                                <option value="">--- Select ---</option>
+                                <option value="A+">A+</option><option value="A-">A-</option>
+                                <option value="B+">B+</option><option value="B-">B-</option>
+                                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                                <option value="O+">O+</option><option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Residential Address</label>
+                        <textarea name="address" class="form-control" rows="2" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Emergency Contact</label>
+                        <input type="text" name="emergency_contact" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Known Allergies (If any)</label>
+                        <textarea name="allergies" class="form-control" rows="2" placeholder="List food, drug, or environmental allergies..."></textarea>
+                    </div>
+
+                    <h5 class="fw-bold text-secondary border-bottom pb-2 mb-3 mt-4">Secure Password</h5>
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Password</label>
+                        {{ form.password1 }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-medium">Confirm Password</label>
+                        {{ form.password2 }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 mt-3 shadow-sm fw-medium">Create Patient Account</button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="small text-muted">Already registered? <a href="{% url 'login' %}" class="text-decoration-none fw-medium">Login Here</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quick frontend injection of bootstrap classes to standard django forms fields
+    document.querySelectorAll('input, select, textarea').forEach(function(el) {
+        if(el.type !== 'checkbox' && el.type !== 'radio') {
+            el.classList.add('form-control');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Patient Central Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-dark mb-1">Patient Healthcare Hub</h2>
+            <p class="text-muted mb-0">Review status logs, manage clinical consultations, and reference medical evaluations.</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="{% url 'book_appointment' %}" class="btn btn-primary shadow-sm"><i class="bi bi-plus-circle me-2"></i>Request New Consultation</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card p-4 border mb-4 dashboard-stat-card">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-person-vcard text-primary me-2"></i>Medical Identifier</h5>
+                <hr class="my-2">
+                <p class="mb-2 small"><strong>Blood Classification:</strong> <span class="badge bg-danger">{{ patient.blood_group|default:"Unspecified" }}</span></p>
+                <p class="mb-2 small"><strong>Allergy Indicators:</strong> <span class="text-muted">{{ patient.allergies|default:"No active records compiled" }}</span></p>
+                <p class="mb-0 small"><strong>Emergency Reference Contact:</strong> <span class="text-muted">{{ patient.emergency_contact|default:"None listed" }}</span></p>
+                <div class="mt-4">
+                    <a href="{% url 'patient_profile' %}" class="btn btn-outline-secondary btn-sm w-100"><i class="bi bi-pencil-square me-2"></i>Modify Profile Metrics</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border p-4 shadow-sm mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-calendar-range text-primary me-2"></i>Active Registered Appointments</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle border-top">
+                        <thead class="table-light small text-uppercase">
+                            <tr>
+                                <th>Doctor Consultation Specialist</th>
+                                <th>Schedule Date</th>
+                                <th>Timing Parameter</th>
+                                <th>Validation Status</th>
+                                <th class="text-center">Action Context Options</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for appt in appointments %}
+                            <tr>
+                                <td class="fw-medium text-dark">Dr. {{ appt.doctor.user.get_full_name }}</td>
+                                <td>{{ appt.date }}</td>
+                                <td>{{ appt.time }}</td>
+                                <td>
+                                    {% if appt.status == 'pending' %}<span class="badge bg-warning text-dark px-2.5 py-1.5 rounded-pill">Pending Approval</span>
+                                    {% elif appt.status == 'approved' %}<span class="badge bg-success px-2.5 py-1.5 rounded-pill">Approved</span>
+                                    {% else %}<span class="badge bg-danger px-2.5 py-1.5 rounded-pill">Cancelled</span>{% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if appt.status == 'pending' %}
+                                    <form action="{% url 'cancel_appointment' appt.pk %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm p-1 px-2" title="Revoke Request"><i class="bi bi-x-circle-fill"></i> Cancel</button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted small">No Options Allowed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted"><i class="bi bi-calendar-x fs-4 d-block mb-2"></i>No historical appointment listings found on your account.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card border p-4 shadow-sm">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-folder2-open text-primary me-2"></i>Verified Clinical History Summary Logs</h5>
+                <div class="list-group list-group-flush small">
+                    {% for history in medical_histories %}
+                        <div class="list-group-item py-3 px-0 border-bottom">
+                            <div class="d-flex w-100 justify-content-between mb-1">
+                                <h6 class="mb-1 fw-bold text-dark">Diagnosis: {{ history.diagnosis }}</h6>
+                                <small class="text-secondary fw-medium"><i class="bi bi-clock me-1"></i>{{ history.date }}</small>
+                            </div>
+                            <p class="mb-1 text-muted"><strong>Prescribed Plan:</strong> {{ history.prescription }}</p>
+                            {% if history.notes %}
+                                <small class="text-info d-block mt-1"><strong>Doctor Reminders:</strong> {{ history.notes }}</small>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <div class="text-center py-4 text-muted"><i class="bi bi-capsule fs-4 d-block mb-2"></i>No prescription files or historical clinical assessment summaries logged.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

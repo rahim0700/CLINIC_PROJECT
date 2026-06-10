@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment - MediCare Clinic{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm border-0 my-3">
+                <div class="mb-3">
+                    <a href="{% url 'dashboard' %}" class="text-decoration-none small text-secondary"><i class="bi bi-arrow-left"></i> Return to Dashboard</a>
+                </div>
+                <h3 class="fw-bold text-dark mb-1"><i class="bi bi-calendar-plus text-primary me-2"></i>Schedule Appointment</h3>
+                <p class="text-muted small mb-4">Choose an available doctor specialist and set your preferred slot parameter[cite: 5, 6].</p>
+
+                <form method="post" class="needs-validation">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger small">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Select Consultant Practitioner</label>
+                        {{ form.doctor }}
+                        {% if form.doctor.errors %}<div class="text-danger small">{{ form.doctor.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label small fw-bold text-secondary">Appointment Date</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}<div class="text-danger small">{{ form.date.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label small fw-bold text-secondary">Preferred Time Slot</label>
+                            {{ form.time }}
+                            {% if form.time.errors %}<div class="text-danger small">{{ form.time.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-secondary">Reason for Visit / Main Symptoms</label>
+                        {{ form.reason }}
+                        {% if form.reason.errors %}<div class="text-danger small">{{ form.reason.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-medium shadow-sm"><i class="bi bi-check2-circle me-2"></i>Book Appointment Slot</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Style fields elegantly with Bootstrap
+    document.getElementById('id_doctor').classList.add('form-select');
+    document.getElementById('id_date').classList.add('form-control');
+    document.getElementById('id_time').classList.add('form-select');
+    document.getElementById('id_reason').classList.add('form-control');
+</script>
+{% endblock %}

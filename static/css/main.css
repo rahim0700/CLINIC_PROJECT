@@ -1,0 +1,61 @@
+
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #0dcaf0;
+    --dark-accent: #1e293b;
+    --light-bg: #f8fafc;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--light-bg);
+    color: #334155;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar Enhancements */
+.navbar {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    background: #ffffff !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Card Designs */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Dashboard Action Buttons */
+.dashboard-stat-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-left: 5px solid var(--primary-color);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+    padding: 80px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Footer Pinning */
+footer {
+    margin-top: auto;
+    background-color: var(--dark-accent);
+    color: #94a3b8;
+}
